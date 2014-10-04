@@ -1,0 +1,21 @@
+{
+    "appKeys": {
+        "KEY_DEPARTURETIME": 0
+    },
+    "capabilities": [
+        ""
+    ],
+    "companyName": "d.bimmler@gmail.com",
+    "longName": "9er",
+    "projectType": "native",
+    "resources": {
+        "media": []
+    },
+    "shortName": "9er",
+    "uuid": "6467d112-6107-455b-b55d-f465fb4ef6e9",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": false
+    }
+}

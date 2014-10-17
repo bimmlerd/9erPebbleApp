@@ -18,6 +18,9 @@ function getConnectionData() {
                var json = JSON.parse(responseText);
                var date = new Date(json.connections[0].from.departureTimestamp*1000);
                
+               var now = Date.now();
+               var timeToDeparture = Math.round(Math.abs((date - now) / 60000)) ;
+               
                var hour = date.getHours();
                var minutes = date.getMinutes();
                if (minutes < 10) {
@@ -26,6 +29,7 @@ function getConnectionData() {
                var departureTime = hour + ":" + minutes;
                var dictionary = {
                  "KEY_DEPARTURETIME": departureTime,
+                 "KEY_TIMETODEP": String(timeToDeparture)
                };
                
                Pebble.sendAppMessage(dictionary,

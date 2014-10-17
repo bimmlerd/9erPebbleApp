@@ -2,33 +2,40 @@
 
 static Window *s_main_window;
 static TextLayer *s_connection_layer;
-
-// Key values for AppMessage Dictionary
-enum {
-  DEPARTURE_KEY = 0,
-  MESSAGE_KEY = 1
-};
+static TextLayer *s_timetodep_layer;
 
 static void main_window_load(Window *window) {
   // Create Connection TextLayer
-  s_connection_layer = text_layer_create(GRect(0, 55, 144, 50));
+  s_connection_layer = text_layer_create(GRect(0, 40, 144, 50));
   text_layer_set_background_color(s_connection_layer, GColorClear);
   text_layer_set_text_color(s_connection_layer, GColorBlack);
-text_layer_set_font(s_connection_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
+  text_layer_set_font(s_connection_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_BOLD));
   text_layer_set_text_alignment(s_connection_layer, GTextAlignmentCenter);
   text_layer_set_text(s_connection_layer, "--");
   
-  // Add as a child to the root layer
+    // Create Time to departure TextLayer
+  s_timetodep_layer = text_layer_create(GRect(0, 80, 144, 50));
+  text_layer_set_background_color(s_timetodep_layer, GColorClear);
+  text_layer_set_text_color(s_timetodep_layer, GColorBlack);
+  text_layer_set_font(s_timetodep_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  text_layer_set_text_alignment(s_timetodep_layer, GTextAlignmentCenter);
+  text_layer_set_text(s_timetodep_layer, "--");
+  
+  // Add as a children to the root layer
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_connection_layer));
+  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_timetodep_layer));
 }
 static void main_window_unload(Window *window) {
   text_layer_destroy(s_connection_layer);
+  text_layer_destroy(s_timetodep_layer);
 }
 
 
 // Called when a message is received from PebbleKitJS
 static void in_received_handler(DictionaryIterator *received, void *context) {
   static char connection_buffer[8];
+  // In .. min
+  static char timetodep_buffer[16];
   
   Tuple *tuple = dict_read_first(received);
   if(tuple) {
@@ -36,8 +43,14 @@ static void in_received_handler(DictionaryIterator *received, void *context) {
     snprintf(connection_buffer, sizeof(connection_buffer), "%s", tuple->value->cstring);
     //APP_LOG(APP_LOG_LEVEL_INFO, "In Connection Buffer: %s", connection_buffer);
     text_layer_set_text(s_connection_layer, connection_buffer);
-  }}
-
+  }
+  tuple = dict_read_next(received);
+  if (tuple) {
+    APP_LOG(APP_LOG_LEVEL_INFO, "Received Message: %s", tuple->value->cstring);
+    snprintf(timetodep_buffer, sizeof(timetodep_buffer), "In %s min", tuple->value->cstring);
+    text_layer_set_text(s_timetodep_layer, timetodep_buffer);
+  }
+}
 
 
 // Called when an incoming message from PebbleKitJS is dropped

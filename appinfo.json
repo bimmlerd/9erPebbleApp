@@ -1,6 +1,7 @@
 {
     "appKeys": {
-        "KEY_DEPARTURETIME": 0
+        "KEY_DEPARTURETIME": 0,
+        "KEY_TIMETODEP": 1
     },
     "capabilities": [
         ""
